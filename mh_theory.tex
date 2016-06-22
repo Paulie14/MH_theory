@@ -12,6 +12,9 @@
 %\framebox{\begin{minipage}[c]{0.98 \textwidth}
 %\color{blue} \it #1 \end{minipage}}\vspace{5 mm}\par}
 \documentclass[times]{nlaauth}%
+% just for our notes
+\usepackage[usenames,dvipsnames]{xcolor}   %colors
+
 \usepackage{moreverb}
 \usepackage{amsfonts}
 \usepackage{amsmath}
@@ -55,6 +58,10 @@ citecolor=blue,filecolor=blue,  menucolor=blue]{hyperref}%
 \def\ol{\overline}
 \def\norm#1{\|#1\|}
 \def\vc#1{\mathbf{#1}}
+\def\dd{\; \mathrm{d}}
+
+\newcommand{\noteJB}[1]{{\color{Blue} \textbf{JB: } \textit{#1}}}
+\newcommand{\notePE}[1]{{\color{Orange} \textbf{PE: } \textit{#1}}}
 
 \begin{document}
 
@@ -922,25 +929,35 @@ the problem, namely it is independent of the discretisation, and therefore,
 coercivity of $\ol{C}$ on $\mbox{null}\,\ol{B}^T$ is also independent of the mesh size.
 
 \begin{theorem}
-\label{th:wellposed}
+\label{th:infsup}
 For any $\ol{q}\in\ol{Q}$ there exists $\ol{q}_0\in \mbox{null}\,\ol{B}^T$, 
-$\ol{q}_{\bot} =\ol{q} - \ol{q}_0$, and $\vc v\in \vc V$ such that 
+$\ol{q} =\ol{q}_{\bot} + \ol{q}_0$, and $\vc v\in \vc V^{-1}$ such that 
 \begin{equation}
 \label{eq:infsup_relation}
- \ol{B}^T\vc v=\ol{q}_{\bot},
+ \ol{B}\vc v=\ol{q}_{\bot},
 \end{equation} 
 and
 \begin{equation}
    \label{eg:infsup_estimate}
- \norm{\vc v}_{\vc V} \le k_0 \norm{\ol{q}_{\bot}}_{\ol{Q}},
+ \norm{\vc v}_{\vc V^{-1}} \le \frac{1}{k_0} \norm{\ol{q}_{\bot}}_{\ol{Q}},
 \end{equation}
 where $k_0$ is a positive constant independent of $h$. 
 \end{theorem}
 
-\begin{proof} 
+\begin{proof}
+Let us define following norms: \notePE{explicitly, for me at least..}
+\begin{eqnarray}
+%	\norm{v}^2_{H(\mathrm{div} ,\Omega)} &=& \norm{v}^2_{0,\Omega} + \norm{\nabla\cdot v}^2_{0,\Omega} \\
+	\norm{v}^2_{V^{-1}_d} &=& \sum_{T\in\mathcal{T}_d} \norm{v}^2_{H(\mathrm{div} ,T)} \\
+%	\norm{v}^2_{V^{-1}} &=& \sum_{d=1}^3 \norm{v}^2_{V^{-1}_d} \\
+	\norm{q}^2_{Q_d} &=& \sum_{T\in\mathcal{T}_d} \norm{q}^2_{0,T} \\
+	\norm{\mu}^2_{\Lambda_d} &=& \sum_{e\in\mathcal{F}_d} \norm{\mu}^2_{0,e} \\
+    \norm{\ol q}^2_{\ol Q_d} &=&  \norm{q}^2_{Q_d} + \norm{\mu}^2_{\Lambda_d}\\
+\end{eqnarray}
 %With respect to the structure of $\mbox{null}\,\ol{B}^T$ described above, we
 %denote $\ol\chi_k\in \ol{Q}$ the characteristic vector of the 
 %connected component $\component$, $k=1,\dots, n_c$. 
+In our case the dual space $\ol Q' = \ol Q = (Q,\Lambda)$ is defined.
 We denote 
 $\mathcal{T}_k\subset \mathcal{T}$ and $\mathcal{F}_k\subset \mathcal{F}$ the set 
 of elements and faces on the component $\component$, respectively. Then, we 
@@ -952,11 +969,17 @@ construct a~component-wise constant function as the $L^2$-projection of $\ol{q}$
   { (\ol\chi_k, \ol\chi_k)_{\ol{Q}} }.
 \end{equation*}
 In particular, we set $\ol{q}_{0,k} = 0$ for components with natural boundary 
-condition. Next, we look for $\vc v|_T = \nabla \big(U|_T\big)$, 
-where $U$ is a~function  
-from the 
-non-conforming space $W_k$ of potentials of $RT_{0}$ functions with zero mean on every 
-connected component,
+condition. 
+
+Next, we look for $\vc v|_T = \nabla \big(U|_T\big)$, where $U$ is a~function  
+from the non-conforming space $W_k$ of potentials of $RT_{0}$ functions with 
+zero mean on every connected component,
+\notePE{
+%Do we really need the zero mean property of $W_k$?
+Am I right that zero mean property of $W_k$ is needed for the Friedrichs 
+(I would say better mean Poincar{\' e} inequality, according to the source)
+which in results due to Lax Milgram gives us also uniqueness of $U$,
+which we do not need in fact?}
 \begin{equation*}
   W_k =\Big\{\phi\in \prod_{T\in \mathcal{T}_k} W(T) : 
     \int_{\component} \phi \,dx =0,\quad
@@ -972,16 +995,66 @@ Here, we denote by $N_{T,i}$ the vertices of the simplex $T$, and $a_i \in \math
 Instead of zero mean, we require homogeneous natural boundary condition on 
 $\partial \component \cap \partial \Omega_{N}$ for components that have this 
 set non-empty.
-Within such setting, the 
-condition (\ref{eq:infsup_relation}) translates, using integration by parts, to 
-the following equation for $U$:
-\begin{equation}
-\label{eq:U} 
- \sum_{T\in \mathcal{T}_k} \int_{T} \nabla U \cdot \nabla \phi = 
-\sum_{T\in \mathcal{T}_k} q_T \int_{T} \phi\,dx + 
-\sum_{e\in \mathcal{F}_k} \mu_e \int_{e} \phi\,ds\qquad 
+
+Within such setting, we can test \eqref{eq:infsup_relation} with a function 
+$\ol\phi = (\phi, \phi_e) \in W_k \subset \ol Q$, $\phi_e$ being the trace of $\phi$ on element face $e$.
+We then have
+\begin{eqnarray}
+    b(\vc v, \phi) + b_{\mathcal{F}}(\vc v, \phi_e) &=& \langle q_\bot, \phi \rangle 
+        + \langle \mu_\bot, \phi_e \rangle  \quad \mathrm{in}\;\component \nonumber\\
+    -\sum_{T\in\mathcal{T}_k} \int_T \phi \nabla\cdot \vc v \dd x 
+    + \sum_{e\in\mathcal{F}_k} \int_e \phi_e \vc v \cdot \vc n \dd s &=&
+    \sum_{T\in\mathcal{T}_k} \int_T q_\bot \phi \dd x 
+    + \sum_{e\in\mathcal{F}_k} \int_e \mu_\bot \phi_e \dd s. \label{eq:infsup_weakform1}
+\end{eqnarray}%
+
+Integration by parts over elements (enabled due to $W(T)\subset\mathrm{H}^1(T)$) 
+and relation between $\vc v$ and $U$ due to choice of space $W(T)$
+results in the following weak form for $U$
+\begin{equation} \label{eq:infsup_weakform2}
+ \sum_{T\in \mathcal{T}_k} \int_{T} \nabla U \cdot \nabla \phi \dd x = 
+\sum_{T\in \mathcal{T}_k} \int_{T} q_\bot \phi \dd x + 
+\sum_{e\in \mathcal{F}_k} \int_{e} \mu_\bot \phi_e \dd s \qquad 
 \forall \phi\in W_k. 
 \end{equation}
+
+To prove the existence of $U$, we put $\phi = U$ in \eqref{eq:infsup_weakform2}
+to obtain
+\begin{equation} \label{eq:infsup_weakform3}
+ \norm{\nabla U}^2_{L^{2}(\component)} \leq
+\sum_{T\in \mathcal{T}_k} \norm{q_T}_{0,T} \norm{U}_{0,T} \dd x + 
+\sum_{e\in \mathcal{F}_k} \norm{\mu_e}_{0,e} \norm{U}_{0,e} \dd s.
+\end{equation}
+Further modifying the right hand side of \eqref{eq:infsup_weakform3}, 
+using the discrete Cauchy inequality, the trace theorem bound 
+$\norm{U}_{0,e} \leq c_t\norm{U}_{1,T}$ and the discrete Friedrichs inequality
+\notePE{(zero) mean Poincar{\' e} inequality, with $C_P$}
+\begin{equation*}
+  \norm{U}^2_{L^{2}(\component)} \le C_F 
+\sum_{T\in\mathcal{T}_k} \int_T |\nabla U|^2 \dd x
+\end{equation*}
+with $C_F$ dependent only on the geometry of $\component$ and regularity of 
+the mesh (see e.g. \cite{Vohralik-2005-ODP}), we obtain a bound 
+\notePE{Constant $c_t$ is probably dependent on $\partial T$, but I do not know how. Is it not a problem? (dependence on $h$ ?)}
+\begin{equation} \label{eq:infsup_estimate1}
+\norm{\nabla U}_{0,\component} \leq \tilde C \norm{\ol q_\bot}_{\ol Q, \component},
+\end{equation}
+with $\tilde C$ depending on $C_F$ and $c_t$. Then, the existence \notePE{and uniqueness} of $U$ 
+is given by the Lax-Milgram lemma.
+Since $\mathrm{B}$ is divergence operator, i.e. $\mathrm{B} \vc v = \nabla\cdot\vc v= q_\bot$ 
+and we have existence of $\vc v$ from $U$, we also have
+\begin{equation} \label{eq:infsup_estimate2}
+\norm{\nabla\cdot v}_{0,\component} = \norm{\ol q_\bot}_{\ol Q,\component}.
+\end{equation}
+
+Summing up \eqref{eq:infsup_estimate1} and \eqref{eq:infsup_estimate2}, we
+get the estimate \eqref{eg:infsup_estimate} with constant $k_0(C_F,C_t)$.
+
+\notePE{The inf-sup condition is supposed to hold on the whole domain, all dimensions included.
+That comes from simple sum of the result over components. Is that correct?}
+
+
+
 In particular, local finite elements are unisolvable with respect to linear 
 forms
 \begin{equation*}
@@ -989,18 +1062,7 @@ forms
 \text{for all sides $s$ of $T$},
 \end{equation*}
 which provides us with test functions to get (\ref{eq:infsup_relation}) back 
-from (\ref{eq:U}). Finally, we derive estimate 
-(\ref{eg:infsup_estimate}) using standard energy estimate together with 
-discrete Friedrichs inequality 
-\begin{equation*}
-  \norm{U}^2_{L^{2}(\component)} \le C_F 
-\sum_{T\in\mathcal{T}_k} \int_T |\nabla U|^2\, dx
-\end{equation*}
-with $C_F$ dependent only on the geometry of $\component$ and regularity of 
-the 
-mesh (see e.g. \cite{Vohralik-2005-ODP}). 
-Then, the existence and uniqueness of $U$ is 
-given by the Lax-Milgram lemma.
+from (\ref{eq:infsup_weakform2}). 
 \end{proof}
 }
 
