@@ -1,0 +1,454 @@
+\documentclass{elsart}
+
+\usepackage{epsfig}
+\usepackage[utf8]{inputenc}
+
+%\usepackage{array}
+
+% ***************************************** PACKAGES
+%\usepackage[active]{srcltx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+%\usepackage{amsthm}
+%\usepackage{fancyhdr}
+%\usepackage{mathbbol}
+%\usepackage{bbm}
+% ***************************************** THEOREMS
+%\newtheorem{thm}{Theorem}[section]
+%\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{definition}[thm]{Definition}
+%\newtheorem{remark}[thm]{Remark}
+%\newtheorem{lemma}[thm]{Lemma}
+%\newtheorem{corollary}[thm]{Corollary}
+%\numberwithin{equation}{section}
+% ***************************************** SYMBOLS
+\def\div{{\rm div}}
+\def\Lapl{\Delta}
+\def\grad{\nabla}
+\def\supp{{\rm supp}}
+\def\dist{{\rm dist}}
+%\def\chset{\mathbbm{1}}
+\def\chset{1}
+
+\def\Tr{{\rm Tr}}
+\def\sgn{{\rm sgn}}
+\def\to{\rightarrow}
+\def\weakto{\rightharpoonup}
+\def\imbed{\hookrightarrow}
+\def\cimbed{\subset\subset}
+\def\range{{\mathcal R}}
+\def\leprox{\lesssim}
+\def\argdot{{\hspace{0.18em}\cdot\hspace{0.18em}}}
+\def\Distr{{\mathcal D}}
+\def\calK{{\mathcal K}}
+\def\FromTo{|\rightarrow}
+\def\convol{\star}
+\def\impl{\Rightarrow}
+%\DeclareMathOperator*{\esslim}{esslim}
+%\DeclareMathOperator*{\esssup}{ess\,sup}
+%\DeclareMathOperator{\ess}{ess}
+%\DeclareMathOperator{\osc}{osc}
+%\DeclareMathOperator{\curl}{curl}
+
+%\def\Ess{{\rm ess}}
+%\def\Exp{{\rm exp}}
+%\def\Implies{\Longrightarrow}
+%\def\Equiv{\Longleftrightarrow}
+% ****************************************** GENERAL MATH NOTATION
+\def\Real{{\rm\bf R}}
+\def\Rd{{{\rm\bf R}^{\rm 3}}}
+\def\RN{{{\rm\bf R}^N}}
+\def\D{{\mathbb D}}
+\def\Nnum{{\mathbb N}}
+\def\Measures{{\mathcal M}}
+\def\d{\,{\rm d}}               % differential
+\def\sdodt{\genfrac{}{}{}{1}{\rm d}{{\rm d}t}}
+\def\dodt{\genfrac{}{}{}{}{\rm d}{{\rm d}t}}
+
+\def\vc#1{\mathbf{\boldsymbol{#1}}}     % vector
+\def\tn#1{{\mathbb{#1}}}    % tensor
+\def\abs#1{\lvert#1\rvert}
+\def\Abs#1{\bigl\lvert#1\bigr\rvert}
+\def\bigabs#1{\bigl\lvert#1\bigr\rvert}
+\def\Bigabs#1{\Big\lvert#1\Big\rvert}
+\def\ABS#1{\left\lvert#1\right\rvert}
+\def\norm#1{\bigl\Vert#1\bigr\Vert} %norm
+\def\close#1{\overline{#1}}
+\def\inter#1{#1^\circ}
+\def\ol#1{\overline{#1}}
+\def\ul#1{\underline{#1}}
+\def\eqdef{\mathrel{\mathop:}=}     % defining equivalence
+\def\where{\,|\,}                    % "where" separator in set's defs
+\def\timeD#1{\dot{\overline{{#1}}}}
+
+% ******************************************* USEFULL MACROS
+\def\RomanEnum{\renewcommand{\labelenumi}{\rm (\roman{enumi})}}   % enumerate by roman numbers
+\def\rf#1{(\ref{#1})}                                             % ref. shortcut
+\def\prtl{\partial}                                        % partial deriv.
+\def\Names#1{{\scshape #1}}
+\def\rem#1{{\parskip=0cm\par!! {\sl\small #1} !!}}
+
+\def\Xint#1{\mathchoice
+{\XXint\displaystyle\textstyle{#1}}%
+{\XXint\textstyle\scriptstyle{#1}}%
+{\XXint\scriptstyle\scriptscriptstyle{#1}}%
+{\XXint\scriptscriptstyle\scriptscriptstyle{#1}}%
+\!\int}
+\def\XXint#1#2#3{{\setbox0=\hbox{$#1{#2#3}{\int}$}
+\vcenter{\hbox{$#2#3$}}\kern-.5\wd0}}
+\def\ddashint{\Xint=}
+\def\dashint{\Xint-}
+
+% ******************************************* DOCUMENT NOTATIONS
+% document specific
+\def\rh{\varrho}
+
+\def\th{\vartheta}
+\def\vl{{\vc{u}}}
+\def\vx{\vc{x}}
+\def\vX{\vc{X}}
+\def\vr{\vc{r}}
+\def\veta{\vc{\eta}}
+\def\dx{\,\d\vx}
+\def\dt{\,\d t}
+\def\bulk{\zeta}
+\def\cS{\close{S}}
+\def\eps{\varepsilon}
+\def\phi{\varphi}
+\def\Bog{{\mathcal B}}
+\def\Riesz{{\mathcal R}}
+\def\distr{\mathcal D}
+\def\Item{$\bullet$}
+\def\iset#1{{\mathcal{#1}}}
+\def\Hdiv{{\bf H^{\rm div}}}
+
+\def\MEtst{\mathcal T}
+%***************************************************************************
+
+
+
+\begin{document}
+
+\begin{frontmatter}
+ \title{Convergence analysis
+ for non-compatible fracture flow discretizations}
+
+
+\author[NTI]{Jan B\v rezina}
+\ead{jan.brezina@tul.cz}
+
+\address[NTI]{New Technologies Institute, 
+Technical University in Liberec, 
+Studentsk\'a 2/1402,
+461 17  Liberec, 
+Czech Republic
+}
+
+\begin{abstract}
+Simulation of the underground water flow in real 3D domains requires also modeling of the flow in
+2D fractures and their 1D intersections. For each dimension we consider  
+the continuity equation and Darcy's law as a model of the stationary saturated flow.
+The water flux between individual dimensions is assumed to be proportional to the pressure difference. The classical discretization schemes requires the alignment of computational meshes between dimensions. We present a mixed-hybrid formulation of the problem and two approximations of the communication terms that relax the alignment condition.
+We perform convergence analysis of these approximations.
+\end{abstract}
+
+\begin{keyword}
+Numerical analysis\sep Mixed formulation\sep Fracture flow 
+
+MAC: 65N12, 35M32
+\end{keyword}
+
+\end{frontmatter}
+
+
+
+
+%\title{Convergence analysis for \\a non-compatible discretization\\
+% of multidimensional fracture flow problem}
+
+
+
+
+
+
+%********************************************************
+\section{Introduction}
+We consider a porous media flow in a 3D domain which contains a network of 2D polygonal fractures and their 1D intersections -- chanels. The 3D volume $\tilde\Omega_3$ is splitted by the fracture planes into subdomains $\Omega_3^i$, $i\in I_3$; the set of open 2D polygons $\tilde\Omega_2$ is broken into open convex subpolygons $\Omega_2^i$, $i\in I_2$ by the lines of their intersections; the set $\tilde\Omega_1$ of these 1D intersections is docomposed into line segments $\Omega_1^i$, $i\in I_1$ by their cross points $\Omega_0^i$, $i\in I_0$.
+
+In particular, we have 
+\begin{equation}
+  \Omega_{d-1} \subset \prtl\Omega_d \setminus \prtl\tilde\Omega_d \quad \text{for} d=1,2,3;
+\end{equation}
+where $\Omega_d$ is union of $\Omega_d^i$, $i\in I_d$.
+
+On every subdomain $\Omega_d^i$, we consider linear flow equations
+\begin{equation}
+\label{flow_eq} 
+   \div \vl= f;\quad  \vl=-\tn K \grad p,
+\end{equation}
+where the velocity $\vl$ and the pressure $p$ are unknowns, while given data are the volume density $f$ of the water sources,
+and the hydraulic permeability tensor $\tn K$.
+The velocity $\vl$ and the permeability tensor $\tn K$ live on the tangent space of the particular subdomain. 
+
+Water exchange between subdomains is given by pressure gradient. Whenever $\Omega_d^i$ is intersection of manifolds
+$\Omega_{d+1}^j$, $j\in I_i$, we prescribe Newton-like condition
+\[
+    \vl_j(\vc x)\cdot\vc n_j(\vc x) = \sigma_j(\vc x)(p_j(\vc x)-p_i(\vc x),\quad  \forall\, j\in I_i,\ \vc x\in\Omega_d^i
+\]
+where $\vl_j(\vc x)$ and $p_j(\vc x)$ are traces of the velocity and the pressure on the boundary of manifold $\Omega_{d+1}^i$, 
+$p_i(\vc x)$ is pressure on $\Omega_d^i$, and $\sigma_j(\vc x)$ is the water transfer coefficient of the manifold $\Omega_{d+1}^j$. The additional source $\tilde f_d(\vc x)$ on the manifold $\Omega_d^i$, $d=1,2$ has a form
+\[
+  \tilde f_d(x)=\sum_{j\in I_i} \vl_j(x)\cdot\vc n_j(x).
+\]
+On the exterior boundary $\Gamma_d=\prtl\Omega \cap \prtl\Omega_d$ of the domain $\Omega_d$, we prescribe general Newton boundary condition
+\[
+   \vl(\vc x)\cdot\vc n(\vc x) = \alpha_d(\vc x)(p(\vc x)-P_d(\vc x)),
+\]
+where $\alpha_d$ and $P_d$ are given data.
+
+In order to obtain good approximation of the velocity field for the transport model, we use discretization
+based on mixed-hybrid formulation. We denote $\tilde\Omega_d^i$, $i\in \tilde I_d$ a further decomposition of
+$\Omega_d^i$, $i\in I_d$ and we denote 
+\[
+\Gamma_d^i=\close{\Omega_d^i}\setminus\bigcup_{i\in\tilde I_d} \tilde\Omega_d^i.
+\]
+
+the interior and boundary edges of the decomposed set $\Omega_d^i$. Then we introduce spaces
+\begin{gather}
+    \label{Vspace}
+        V=V_3\times V_2\times V_1=
+                \prod_{d\in{3,2,1}} \prod_{j\in \tilde I_d} H(\div,\tilde\Omega_d^j)\\
+    \label{Pspace}  
+        P=P_3\times P_2\times P_1\times \mathring{P}_3\times \mathring{P}_2 \times \mathring{P}_1,\\
+    \notag
+        P_d=L^2(\Omega_d),\quad \mathring{P}_d=\prod_{i\in I_d}H^{1/2}(\Gamma_d^i).
+\end{gather}
+In following, we use notation $\vl_d^j$ for components of $\vl\in V$ and $p_d$, $\mathring{p}_d^i$ for components of $p\in P$. Noting, that on $\Omega_d^i$, $d\in 1,2$, we have one pressure $p_d$ on the fracture $p_d$ and possibly several traces $\mathring{p}_d^i$ of the pressure on neighbouring subdomains. 
+
+For every $j\in\tilde I_d$ we denote 
+\[
+   i(j) \in I_d\ :\ \Omega_d^j \subset \Omega_d^{i(j)} 
+\]
+the index of "mother" domain of $\Omega_d^j$. Now we define mixed-hybrid solution as follows
+\begin{definition}
+We say that pair $(\vl,p)\in V\times P$ is MH-solution of the problem if it satisfy 
+abstract saddle point problem
+\begin{align}
+        \label{Saddle1}
+ a(\vl,\vc w) + b(\vc w, p) &= 0 &&\forall \vc w\in V,\\
+        \label{Saddle2}
+ b(\vl, q) - c(p,q) &= \langle F, q \rangle &&\forall q \in P,
+\end{align}
+where
+\begin{align*}
+ a(\vc v,\vc w)&=\sum_{d=1,2,3}\sum_{j\in \tilde I_d} \int_{\tilde\Omega_d^j} \vc v_d^j \tn K_d^{-1} \vc w_d^j,\\
+ b(\vc v,q)&=\sum_{d=1,2,3}\sum_{j\in \tilde I_d} 
+        \left(
+        \int_{\tilde\Omega_d^j} -\div\vc v_d^j q_d
+        +\int_{\prtl\tilde\Omega_d^j}
+                 (\vc v_d^j \cdot \vc n)\mathring{q}_d^{i(j)}
+        \right),\\
+ c(p,q)&=\sum_{d=1,2,3} \sum_{j\in \tilde I_{d-1}}
+          \left(
+          \int_{\tilde\Omega_{d-1}^j} (p_{d-1}-\mathring{p}_{d}^j)(q_{d-1}-\mathring{q}_{d}^j)
+          +\int_{\Gamma_d} \alpha_d \mathring{p}_d \mathring{q}_d
+          \right),\\
+ \langle F, q\rangle &= -\sum_{d=1,2,3}\left(\int_{\Omega_d} f_d p_d +
+           \int_{\Gamma_d}  \alpha_d P_d \mathring{q}_d\right).
+\end{align*}
+\end{definition}
+To simplify formula for $c(p,q)$, we have formally set $\tilde I_{0} = \emptyset$ since the first integral is taken 
+only over 1D and 2D communication interfaces, while the second term corresponds to the Newton boundary condition for 
+every dimension. In the term $c(p,q)$, the symbols $\mathring{p}$ and $\mathring{q}$ should be understood as 
+elemnets of $L^2 \supset H^{1/2}$.
+
+In the following we consider lowest order approximation of the MH-formulation. Assume that $\Omega_d$ are polyhedrons 
+triangulated by simplexes $\tilde\Omega_d^j$, $j\in \tilde I_d$. 
+Then, we approximate the space $H(\div,\tilde\Omega_d^j)$ by the Raviart-Thomas space $RT_0(\tilde\Omega_d^j)$ (see \cite{fortin_mixed_1991}) and the spaces $L^2(\Omega_d)$ and $H^{1/2}(\Gamma_d^i)$ by piecewise constant functions on elements and their edges respectively. (for details see \cite{maryska_mixed-hybrid_1995}).
+
+
+
+
+
+We consider linear model for a flow in saturated porous media
+\begin{equation}\label{Darcy}
+        \vl_d=-\tn K_d \grad p_d \quad \text{on }\tilde \Omega_d
+\end{equation}
+and the continuity equation
+\begin{equation}\label{RC}
+        \div \vl_d = F_d        \quad \text{on }\tilde \Omega_d,
+\end{equation}
+
+
+For the sake of clarity we present ideas on the simple 2D-1D case. Let us consider a 2D domain $\Omega_2\subset \Real^2$
+splitted into two subdomains by a 1D fracture $\Omega_1\subset\Omega_2$.
+We denote $ \tilde\Omega_2=\Omega_2\setminus\Omega_1$ and $\tilde\Omega_1=\Omega_1$.
+To avoid technical difficulties we assume that $\Omega_2$ have polygonal boundary and $\Omega_1$ is a straight line. The flow on the domain $\Omega_d$ ($d=1,2$) is described by the velocity $\vl_d$ and the pressure
+$p_d$. These state variables has to satisfy Darcy's law
+where $\tn K_d$ is (tensor of) the hydraulic conductivity, $F_2=f_2$ and $F_1=f_1+q$
+are water sources, while $q$ denotes the outflow from 2D domain. We consider a non-separating crack, which means that the pressure is continuous across the crack and the sum of outflow from the walls of the fracture is equal to the fracture inflow,
+namely  
+\begin{gather*}
+ 	p_2^{+} = p_2^{-}\quad \text{on }\Omega_1,\\
+ 	[\vl_2]_{\Omega_1}:= (\vc \vl_2^{+}\cdot\vc n^{+} + \vc u_2^{-}\cdot\vc n^{-}) = q.
+\end{gather*}
+Since the pressure is continuous we can prescribe
+\[
+ q=\sigma(p_2|_{\Omega_1} - p_1),
+\]
+where $\sigma$ is an interchange coefficient, we take $\sigma=1$. The system is completed by the boundary conditions
+\begin{align*}
+%        \label{ClassDirichBC} 
+        p_d = p^D&\quad \text{on }\Gamma_d^D,\\
+%        \label{ClassNeumanBC}
+        \vl_d\cdot\vc n= u^N&\quad \text{on }\Gamma_d^N.
+\end{align*}
+where $\Gamma_d^D$ is Dirichlet and $\Gamma_d^N$ Neumann part of the boundary $\prtl\Omega_d$.
+
+\section{Mixed-hybrid formulation on aligned meshes}
+Let $\{\Omega_d^i\}$, $i\in I_d$ be a decomposition of domain $\Omega_d$ into disjoint subdomains
+that satisfy the alignment condition
+\begin{equation}\label{compatible}
+ 	\Omega_1\subset \Gamma_2,\quad \Gamma_d:=\bigcup_{i\in I_d} \prtl\Omega_d^i\setminus\prtl\Omega_d,
+\end{equation}
+where $\Gamma_d$ is union of interior faces. We multiply the equations \eqref{Darcy},
+\eqref{RC} by suitable test functions and integrate over the individual subdomains.
+We integrate by parts in \eqref{Darcy} and we treat traces of the pressure as
+an independent variable (for details see~\cite{Maryska}). Finally we obtain mixed-hybrid formulation of the problem specified in the previous section.
+
+\begin{thm}{Definition 1.}
+We say that $(\vl,p)$ is MH-solution of the problem if the composed velocity $\vl$ and
+the composed pressure $p$ belong to the spaces
+\begin{gather}
+	\label{Vspace}
+	\vl=(\vl_2,\vl_1)\in V=V_2\times V_1=
+		\prod_{i\in I_2} H(\div,\Omega_2^i)\times \prod_{i\in I_1} H(\div,\Omega_1^i)\\
+	\label{Pspace}	
+    p=(p_2,p_1,\ol{p}_2,\ol{p}_1)\in P=P_2\times P_1\times \ol{P}_2\times\ol{P}_1,\\
+    \notag
+    P_d=L^2(\Omega_d),\quad \ol{P}_d=H^{1/2}(\Gamma_d\cup\Gamma_d^N).
+\end{gather}
+and they satisfy abstract saddle point problem
+\begin{align}
+        \label{Saddle1}
+ a(\vl,\vc w) + b(\vc w, p) &= \langle G(p^D), \vc w \rangle &&\forall \vc w=(\vc\phi_2,\vc\phi_1)\in V,\\
+        \label{Saddle2}
+ b(\vl, q) - c(p,q) &= \langle F(f,u^N), q \rangle &&\forall q=(q_2,q_1,\ol{q}_2,\ol{q}_1) \in P,
+\end{align}
+where
+\begin{gather*}
+ a(\vc v,\vc w)=\sum_{d=1,2}\sum_{i\in I_d} \int_{\Omega_d^i} \vc v_d \tn K_d^{-1} \vc w_d\\
+ b(\vc v,q)=\sum_{d=1,2}\sum_{i\in I_d} \int_{\Omega_d^i} -\div\vc v_d q_d
+ 	+\int_{\Gamma_d} [\vc v_d]\ol{q}_d+\int_{\Gamma_d^N} (\vc v_d\cdot \vc n)\ol{q}_d\\
+ c(p,q)=\int_{\Omega_1} (p_1-\ol{p}_2)(q_1-\ol{q}_2).
+ \label{Cform}
+\end{gather*}
+\end{thm}
+Note that in definition of bilinear form $c(p,q)$, we need trace $\ol{p}_2$ on $\Omega_1$,
+which is available because of the condition \eqref{compatible}.
+
+The existence and uniqueness of the MH-solution is a direct corollary of Theorem 1.2 in \cite{Brezzi}.
+Furthermore, one can use Raviart-Thomas elements to construct approximation spaces and use again theory
+from \cite{Brezzi} to get an $O(h)$ estimate:
+\begin{equation}\label{CompatibleConvergence}
+ \norm{\vl-\vl_h}_{V} + \norm{p-p_h}_{P} \le C h\big(\norm{\vl}_{H^1} + \norm{p}_{H^1}\big).
+\end{equation}
+Note that according to the regularity theory for the linear elliptic equations one can expect $p\in W^{2,p}$ and $\vl\in W^{1,p}$ for all $1<p<\infty$, provided data from $L^\infty$ and certain beter regularity of the boundary conditions.
+
+\section{Mixed-hybrid formulation on non-compatible meshes}
+In practical applications, we frequently use statistically generated fractures. In this situation,
+it could be nearly impossible to produce a regular mesh satisfying the alignment condition
+\eqref{compatible}.  In order to relax this condition, we have to construct an approximation of
+the trace of the pressure on the fracture $\Omega_1$. Let $\{\Omega_2^i\},\ i\in I_2$ be a regular triangular decomposition of $\Omega_2$ with diameter of elements bounded by $h$ and let
+\[
+        \Omega_1^i=\Omega_2^i \cap \Omega_1,
+\] be elements of the induced decomposition of $\Omega_1$.
+On these decompositions we consider spaces $V^h$ and $P^h$ similar to \eqref{Vspace} and \eqref{Pspace}. Splitting further the triangles intersecting $\Omega_1$, we obtain an aligned decomposition of $\Omega_2$ on which we can build spaces $V$ and $P$.
+Finally, we denote $\Omega_{12}$ the union of $\Omega_2$-subdomains intersecting $\Omega_1$
+\[
+  \Omega_{12}=\bigcup_{i\in I_{1}} \Omega_2^i,\quad
+   \text{where }  I_{1}=\{i\in I_2| \Omega_1^i  \ne \emptyset \}.
+\]
+
+Let $\Pi$ be a continuous linear operator from $P_h$ to the functions piecewise continuous on
+subdomains $\Omega_2^i$, $i\in I_1$. Then we can define an approximation $T$ of the trace operator for the functions $p\in P_h$ by the formula $T(p)=Tr_{\Omega_1}(\Pi(p))$, locally on each triangle $\Omega_2^i$, $i\in I_1$. In particular, we can use an average approximation
+\[
+   \Pi_0 |_{\Omega_2^i}(p) = \frac{1}{\abs{\Omega_2^i}}
+   		\int_{\Omega_2^i} p_2 \dx,\quad \forall i\in I_{1}
+\]
+or a piecewise linear approximation $\Pi_1$ such that
+\[
+  \int_S \Pi_1|_{\Omega_2^i}(p) = \int_S \ol{p}_2
+\]
+for every side $S$ of the triangle $\Omega_2^i$, $i\in I_{1}$.
+
+The operator $T$ can be used to extend the trace component $\ol{p}_2$ of the space $P_h$ on the fracture $\Omega_1$. Consequently, we  can treat the space $P_h$ as a subspace of $P$ with a norm
+\begin{equation}\label{PspaceExtension}
+ 	\norm{f}_P=\norm{f}_{P_h}+\norm{T f}_{H^{1/2}(\Omega_1)}.
+\end{equation}
+In view of this convention, one can use Definition 1 with spaces $V_h \subset V$ and $P_h\subset P$ to introduce a semi-discrete solution $(\vl_h,p_h)$. Then again,
+Theorem 1.2 in \cite{Brezzi} implies the existence and uniqueness of the solution.
+
+Now we want to compare the MH-solution $(u,p)\in V\times P$ to the semi-discrete solution $(\vl_h,p_h)\in V_h\times P_h$. Following the proof of Proposition 2.11 in \cite{Brezzi}, we can show
+\begin{equation}\label{MainEst}
+ 	\norm{\vl-\vl_h}_V + \norm{p-p_h}_P \le C\big(
+ 		\inf_{\vc v_h \in V_h}\norm{\vl - \vc v_h}_{V} + \inf_{q_h\in P_h}\norm{p-q_h}_{P}
+                \big).
+\end{equation}
+Taking $\vc v_h=\vl-\vl^*$, where $\vl^*$ is a divergence free extension of $[\vl]_{\Omega_1}$
+to $\Omega_{21}$, we can bound the first term by $O(h)$ times $L^2$-norm of $[\vl]_{\Omega_1}$.
+Further, we take $q_h$ equal to the projection of $p$ on the space $P_h$, then according to \eqref{PspaceExtension} we get
+\[
+  \norm{p-q_h}_{P} = \norm{p-T p}_{H^{1/2}(\Omega_1)}\le C\Big(\sum_{i\in I_1} \norm{p - \Pi p}_{H^1(\Omega_2^i)}^2\Big) ^\frac12.
+\]
+If $\Pi$ preserves polynomials up to the order $k$, the standard approximation estimates
+(see \cite{FEMHandbook} Theorem 16.2) leads to
+\[
+ \norm{p-\Pi p}_{1,\Omega_2^i}\le C\abs{\Omega_2^i}^{\frac12-\frac1q} h^k \abs{p}_{k,q,\Omega_2^i}.
+\]
+Since we assume regular triangulation, we have $\abs{\Omega_2^i}\le C h^N$ and $\abs{I_1} \le C h^{1-N}$,
+where $N=2$ is dimension of $\Omega_2$.
+Then we conclude
+\[
+        \norm{p-Tp}_{H^{1/2}(\Omega_1)}\le C h^{N(\frac12-\frac1q)+k}\Big(\sum_{i\in I_1} \abs{p}_{k+1,q,\Omega_2^i}^2 \Big)^\frac12\le
+        C h^\alpha \abs{p}_{k+1,q,\Omega_2}
+\]
+where 
+\begin{equation}\label{ApproxOrder}
+        \alpha= N\Big(\frac12-\frac1q\Big)+k+(1-N)\frac{q-2}{2q}=k+\frac{1}{2}-\frac{1}{q}.
+\end{equation}
+
+\section{Conclusion}
+We have proposed two approximations of the original MH-problem on the non-aligned meshes. 
+The first is based
+on the operator $\Pi_0$, which preserves only polynomials of zero order. Hence, $\alpha<1/2$ for all $q$ and we obtain a suboptimal convergence compared to \eqref{CompatibleConvergence}. In the later case, the approximation is based on the operator
+$\Pi_1$, which preserves polynomials of the first order. We get $\alpha=1$ for $q=2$ and an optimal  convergence rate $O(h)$.
+In both cases, we have to assume certain regularity of the exact solution. Although we did our analysis
+only in 2D case with simple geometry, the abstract formulation and the results hold also for more complicated geometries and 3D-2D communication. 
+
+{\bf Acknowledgement: This work was supported by GA\v CR 205/09/P567.}
+
+\begin{thebibliography}{99}
+\bibitem{Brezzi} F. Brezzi, M. Fortin,
+{\it Mixed and Hybrid Finite Element Methods}.
+Springer Verlag, Berlin/Heidelberg, 1991
+\bibitem{FEMHandbook} P.G. Ciarlet, J.L. Lions,
+{\it Handbook of Numerical Analysis : Finite element method (Part~1)}.
+ North-Holland, Amsterdam, 1991
+\bibitem{Maryska} J. Mary\v{s}ka,  M. Rozlo\v{z}n\'{\i}k, M. T\r{u}ma.
+{\it Mixed-hybrid finite element approximation  of the potential fluid flow problem}.
+J. Comput. Appl. Math., Vol. 63, (1995), pp. 383--392.
+
+\end{thebibliography}
+
+\end{document}
+
+
+
+
+
+
+
+
+

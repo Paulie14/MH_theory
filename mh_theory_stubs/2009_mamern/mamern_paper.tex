@@ -1,0 +1,620 @@
+\documentclass{elsarticle}
+
+\usepackage{epsfig}
+\usepackage[utf8]{inputenc}
+
+%\usepackage{array}
+
+% ***************************************** PACKAGES
+%\usepackage[active]{srcltx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+%\usepackage{amsthm}
+%\usepackage{fancyhdr}
+%\usepackage{mathbbol}
+%\usepackage{bbm}
+% ***************************************** THEOREMS
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{definition}[thm]{Definition}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{lemma}[thm]{Lemma}
+%\newtheorem{corollary}[thm]{Corollary}
+%\numberwithin{equation}{section}
+\newproof{proof}{Proof}
+
+% ***************************************** SYMBOLS
+\def\div{{\rm div}}
+\def\Lapl{\Delta}
+\def\grad{\nabla}
+\def\supp{{\rm supp}}
+\def\dist{{\rm dist}}
+%\def\chset{\mathbbm{1}}
+\def\chset{1}
+
+\def\Tr{{\rm Tr}}
+\def\sgn{{\rm sgn}}
+\def\to{\rightarrow}
+\def\weakto{\rightharpoonup}
+\def\imbed{\hookrightarrow}
+\def\cimbed{\subset\subset}
+\def\range{{\mathcal R}}
+\def\leprox{\lesssim}
+\def\argdot{{\hspace{0.18em}\cdot\hspace{0.18em}}}
+\def\Distr{{\mathcal D}}
+\def\calK{{\mathcal K}}
+\def\FromTo{|\rightarrow}
+\def\convol{\star}
+\def\impl{\Rightarrow}
+%\DeclareMathOperator*{\esslim}{esslim}
+%\DeclareMathOperator*{\esssup}{ess\,sup}
+%\DeclareMathOperator{\ess}{ess}
+%\DeclareMathOperator{\osc}{osc}
+%\DeclareMathOperator{\curl}{curl}
+
+%\def\Ess{{\rm ess}}
+%\def\Exp{{\rm exp}}
+%\def\Implies{\Longrightarrow}
+%\def\Equiv{\Longleftrightarrow}
+% ****************************************** GENERAL MATH NOTATION
+\def\Real{{\rm\bf R}}
+\def\Rd{{{\rm\bf R}^{\rm 3}}}
+\def\RN{{{\rm\bf R}^N}}
+\def\D{{\mathbb D}}
+\def\Nnum{{\mathbb N}}
+\def\Measures{{\mathcal M}}
+\def\d{\,{\rm d}}               % differential
+\def\sdodt{\genfrac{}{}{}{1}{\rm d}{{\rm d}t}}
+\def\dodt{\genfrac{}{}{}{}{\rm d}{{\rm d}t}}
+
+\def\vc#1{\mathbf{\boldsymbol{#1}}}     % vector
+\def\tn#1{{\mathbb{#1}}}    % tensor
+\def\abs#1{\lvert#1\rvert}
+\def\Abs#1{\bigl\lvert#1\bigr\rvert}
+\def\bigabs#1{\bigl\lvert#1\bigr\rvert}
+\def\Bigabs#1{\Big\lvert#1\Big\rvert}
+\def\ABS#1{\left\lvert#1\right\rvert}
+\def\norm#1{\bigl\Vert#1\bigr\Vert} %norm
+\def\close#1{\overline{#1}}
+\def\inter#1{#1^\circ}
+\def\ol#1{\overline{#1}}
+\def\ul#1{\underline{#1}}
+\def\eqdef{\mathrel{\mathop:}=}     % defining equivalence
+\def\where{\,|\,}                    % "where" separator in set's defs
+\def\timeD#1{\dot{\overline{{#1}}}}
+
+% ******************************************* USEFULL MACROS
+\def\RomanEnum{\renewcommand{\labelenumi}{\rm (\roman{enumi})}}   % enumerate by roman numbers
+\def\rf#1{(\ref{#1})}                                             % ref. shortcut
+\def\prtl{\partial}                                        % partial deriv.
+\def\Names#1{{\scshape #1}}
+\def\rem#1{{\parskip=0cm\par!! {\sl\small #1} !!}}
+
+\def\Xint#1{\mathchoice
+{\XXint\displaystyle\textstyle{#1}}%
+{\XXint\textstyle\scriptstyle{#1}}%
+{\XXint\scriptstyle\scriptscriptstyle{#1}}%
+{\XXint\scriptscriptstyle\scriptscriptstyle{#1}}%
+\!\int}
+\def\XXint#1#2#3{{\setbox0=\hbox{$#1{#2#3}{\int}$}
+\vcenter{\hbox{$#2#3$}}\kern-.5\wd0}}
+\def\ddashint{\Xint=}
+\def\dashint{\Xint-}
+
+% ******************************************* DOCUMENT NOTATIONS
+% document specific
+\def\rh{\varrho}
+\def\th{\vartheta}
+\def\vl{{\vc{u}}}
+\def\vx{\vc{x}}
+\def\vX{\vc{X}}
+\def\vr{\vc{r}}
+\def\dx{\,\d\vx}
+\def\dt{\,\d t}
+\def\bulk{\zeta}
+\def\cS{\close{S}}
+\def\eps{\varepsilon}
+\def\phi{\varphi}
+\def\Bog{{\mathcal B}}
+\def\Riesz{{\mathcal R}}
+\def\distr{\mathcal D}
+\def\Item{$\bullet$}
+\def\conv{\longrightarrow}
+
+
+\def\mr{\mathring}
+\def\Im{{\rm Im\,}}
+\def\Ker{{\rm Ker\,}}
+
+%***************************************************************************
+
+
+
+\begin{document}
+\parindent=0pt
+
+\begin{frontmatter}
+ \title{Convergence analysis
+ for non-compatible fracture flow discretizations}
+
+
+\author[NTI]{Jan B\v rezina}
+\ead{jan.brezina@tul.cz}
+
+\address[NTI]{New Technologies Institute, 
+Technical University in Liberec, 
+Studentsk\'a 2/1402,
+461 17  Liberec, 
+Czech Republic
+}
+
+\begin{abstract}
+Simulation of the underground water flow in real 3D domains requires also modeling of the flow in
+2D fractures and their 1D intersections. For each dimension we consider  
+the continuity equation and Darcy's law as a model of the stationary saturated flow.
+The water flux between individual dimensions is assumed to be proportional to the pressure difference. The classical discretization schemes requires the alignment of computational meshes between dimensions. We present a mixed-hybrid formulation of the problem and two approximations of the communication terms that relax the alignment condition.
+We perform convergence analysis of these approximations.
+\end{abstract}
+
+\begin{keyword}
+Numerical analysis\sep Mixed formulation\sep Fracture flow 
+
+MAC: 65N12, 35M32
+\end{keyword}
+
+\end{frontmatter}
+
+
+
+
+%\title{Convergence analysis for \\a non-compatible discretization\\
+% of multidimensional fracture flow problem}
+
+
+
+\section{Introduction}
+In this work we shall make an analysis of mixed-hybrid formulations of a linear elliptic equations on several domains of different dimension. For the sake of clarity we present our ideas on the simple 2D-1D case, but we shall prove abstract 
+results that can be used also for general cases. Let us consider a 2D domain $\Omega_2\subset \Real^2$
+splitted into two subdomains by a 1D fracture $\Omega_1\subset\Omega_2$.
+We denote $ \tilde\Omega_2=\Omega_2\setminus\Omega_1$ and $\tilde\Omega_1=\Omega_1$.
+To avoid technical difficulties we assume that $\Omega_2$ have polygonal boundary and $\Omega_1$ is a straight line. The flow on the domain $\Omega_d$ ($d=1,2$) is described by the velocity $\vl_d$ and the pressure
+$p_d$. These state variables has to satisfy Darcy's law
+\begin{equation}\label{Darcy}
+        \vl_d=-\tn K_d \grad p_d \quad \text{on }\tilde \Omega_d
+\end{equation}
+and the continuity equation
+\begin{equation}\label{RC}
+        \div \vl_d = F_d        \quad \text{on }\tilde \Omega_d,
+\end{equation}
+where $\tn K_d$ is (tensor of) the hydraulic conductivity, $F_2=f_2$ and $F_1=f_1+q$
+are water sources, while $q$ denotes the outflow from 2D domain. We consider a "non-separating" crack, which means that the pressure is continuous across the crack and the sum of outflow from the walls of the fracture is equal to the fracture inflow,
+namely  
+\begin{gather*}
+        p_2^{+} = p_2^{-}\quad \text{on }\Omega_1,\\
+        [\vl_2]_{\Omega_1}:= (\vc \vl_2^{+}\cdot\vc n^{+} + \vc u_2^{-}\cdot\vc n^{-}) = q.
+\end{gather*}
+Since the pressure is continuous we can prescribe
+\begin{equation}
+ \label{Qflux}
+ q=\sigma(p_2|_{\Omega_1} - p_1),
+\end{equation}
+where $\sigma$ is the water transfer coefficient, through our analysis we $\sigma=1$. The system is completed by the boundary conditions
+\begin{align*}
+%        \label{ClassDirichBC} 
+        p_d = p^D&\quad \text{on }\Gamma_d^D,\\
+%        \label{ClassNeumanBC}
+        \vl_d\cdot\vc n= u^N&\quad \text{on }\Gamma_d^N.
+\end{align*}
+where open set $\Gamma_d^D$ is the Dirichlet part of the boundary and $\Gamma_d^N=\prtl\Omega_d\setminus\Gamma_d^D$ is the Neumann part of the boundary.
+
+A direct discretization of the presented problem leads to a compatibility condition for the meshing of individual domains,
+namely triangles of $\Omega_2$ should be aligned with $\Omega_1$. The main reason is presence of the trace of the pressure $p_2$ in \eqref{Qflux}. While this is not very restrictive in the case of few domains,
+it should be intractable in the case of hundreds or thousends of interacting domains. To relax the compatibility condition
+we propose to approximate the trace of $p_2$ by a suitable linear operator $T(p_2)$. In Section \ref{AbstractSec} we
+define abstract mixed-hybrid formulations of the original problem and of the problem with approximated trace. We shall show the existence and uniqueness of the solution and we will prove an abstract error estimate. In Section \ref{TraceApprox} we
+present several applications of our abstract results for particular choice of the trace approximating operator~$T$. 
+
+
+
+\section{Abstract mixed-hybrid formulations}
+\label{AbstractSec}
+Let $\mathcal P=\{\Omega_d^i\}$, $i\in I_d$ be a decomposition of domain $\Omega_d$ into disjoint subdomains
+that satisfy the alignment condition
+\begin{equation}\label{compatible}
+        \Omega_1\subset \Gamma_2\setminus\prtl\Omega_2,\quad \text{ where }\Gamma_d:=\bigcup_{i\in I_d} \prtl\Omega_d^i
+\end{equation}
+is union of subdomain boundaries. Assuming that all indeces are unique, we denote a common index set $I=I_1\cup I_2$.
+On the decomposition $\mathcal P$, we introduce the velocity space
+\begin{equation}
+        \label{Vspace}
+        V=V_2\times V_1=
+                \prod_{i\in I_2} H(\div,\Omega_2^i)\times \prod_{i\in I_1} H(\div,\Omega_1^i).
+\end{equation}
+Further we introduce the space of the pressure and its trace on $\Gamma_d\setminus \Gamma_d^D$
+\begin{gather}
+    \label{Pspace}  
+        Q=Q_2\times Q_1\times \mr{Q}_2\times\mr{Q}_1,\\
+    \notag
+    Q_d=L^2(\Omega_d),\quad \mr{Q}_d=\{\phi\in H^{1/2}(\Gamma_d)\where \phi=0\text{ on }\Gamma_d^D\}.
+\end{gather}
+For the components of $\vl\in V$ and  $p\in Q$, we will use notation $\vl = (\vl_2,\vl_1)$ and  $p=(p_2,p_1,\mr{p_2},\mr{p_1})$ respectively.
+On these spaces we shall define mixed-hybrid solution similarly as in  \cite{maryska_mixed-hybrid_1995} or \cite{arbogast_nonlinear_1996}, but using the language of the book \cite{fortin_mixed_1991} by Brezzi and Fortin.
+
+\begin{definition}
+\label{DefProblemP}
+We say that the pair $(\vl,p)\in V\times Q$ is a solution of problem $P(\mathcal P)$ on the partitioning $\mathcal P$ if
+it satisfies a saddle point problem
+\begin{align}
+        \label{SaddleP1}
+ a(\vl,\vc w) + b(\vc w, p) &= \langle G, \vc w \rangle &&\forall \vc w\in V,\\
+        \label{SaddleP2}
+ b(\vl, q) - c(p,q) &= \langle F, q \rangle &&\forall q \in Q,
+\end{align}
+where the bilinear forms on the left-hand side are
+\begin{gather*}
+ a(\vc u,\vc w)=\sum_{d=1,2}\sum_{i\in I_d} \int_{\Omega_d^i} \vc u_d \tn K_d^{-1} \vc w_d,\\
+ b(\vc u,q)=\sum_{d=1,2}\sum_{i\in I_d}\left( \int_{\Omega_d^i} -\div\vc u_d q_d
+        +\int_{\partial\Omega_d^i} (\vc u_d\cdot\vc n) \mr{q}_d\right),\\
+ c(p,q)=\int_{\Omega_1} (p_1-\mr{p}_2)(q_1-\mr{q}_2),
+\end{gather*}
+and the linear functionals on the right-hand side have the form
+\begin{gather*}
+ \langle G, \vc w \rangle = - \sum_{d=1,2}\sum_{i\in I_d}\int_{\partial\Omega_d^i} (\vc w\cdot\vc n) \tilde P_d,\\
+ \langle F, q \rangle = -\sum_{d=1,2} \int_{\Omega_d} f_d q_d +\sum_{d=1,2} \int_{\Gamma_d^N} u^N_d \mr{q}_d,
+\end{gather*} 
+where $\tilde P_d\in H^{1/2}(\Gamma_d)$ is an extension of the Dirichlet condition $P_d\in H^{1/2}(\Gamma_d^D)$. Consequently the full trace of the unknown pressure on $\Gamma_d$ is given by $\mr{p_d}+\tilde P_d$.
+\end{definition}
+Note that in definition of bilinear form $c(p,q)$, we need trace $\mr{p}_2$ on $\Omega_1$,
+which is available because of the compatibility condition \eqref{compatible}. In order to relax this condition, we shall define MH-solution to a problem $P_T(\mathcal P)$ with interdomain flux:
+\[
+   q_T= T(p_2,\mr{p_2}) - p_1,
+\]
+where trace of the pressure is approximated by a linear operator $T$:
+\begin{equation} 
+\label{OpT}
+T: Q_2\times\mr{Q_2} \to L^2(\Omega_1),
+\end{equation}
+which is continuous and maps constants to constants, i.e.
+\begin{equation}
+\label{OpTconst} 
+   \text{ if}\quad p_2=\mr{p_2}=\pi,\ \pi\in\Real\quad \text{then}\quad T(p_2,\mr{p_2})=\pi.
+\end{equation}
+We will also write $T p$ as an abbreviated form of $T(p_2,\mr{p_2})$.
+
+\begin{definition}
+\label{DefProblemPT}
+We say that the pair $(\vl,p)\in V\times Q$ is a solution of problem $P_T(\mathcal P)$ if 
+it satisfies a saddle point problem
+\begin{align}
+        \label{SaddlePT1}
+ a(\vl,\vc w) + b(\vc w, p) &= \langle G, \vc w \rangle &&\forall \vc w\in V,\\
+        \label{SaddlePT2}
+ b(\vl, q) - c_T(p,q) &= \langle F, q \rangle &&\forall q \in P,
+\end{align}where
+\begin{equation*}
+ c_T(p,q)=\int_{\Omega_1} (p_1-T(p_2,\mr{p}_2))(q_1-T(q_2,\mr{q}_2))
+\end{equation*}
+and the other forms are same as in Definition \ref{DefProblemP}.
+\end{definition}
+
+\begin{remark}
+Even if we consider Problem~$P_T(\mathcal P)$ as an approximation of Problem~$P(\mathcal P)$. It is in fact
+generalization of Problem~$P(\mathcal P)$, since the later one is a particular case of the first one with $T(p_2,\mr{p}_2)=\mr{p}_2$.
+\end{remark}
+
+\begin{remark}
+Further we can observe, that Definition \ref{DefProblemPT} does not change if we test only by $q$ from $H^1$. More specificaly it is enough to test by $q_d=\phi$, $\mr{q_d}=Tr(\phi)$, where
+\begin{equation}\label{SobolevTestFunc}
+  \phi\in H_d:=\{f\in H^1(\Omega_d)\where f=0 \text{ on } \Gamma_d^D\}.
+\end{equation}
+\end{remark}
+
+Indeed for any $q_d\in L^2(\Omega_d)$ one can use standard molifiers and cut-off functions to construct a sequence
+\[
+  f_n \in \prod_{i\in I_d} H_0^1(\Omega_d^i),\quad f_n\conv q_d \text{ in  }L^2(\Omega_d).
+\]
+Similarly for any $\mr{q}_d\in \mr{P}_d$, there exists $g\in H_d$ with trace on $\Gamma$ equal to $\mr{q}_d$.
+Multiplying it by cut-off functions concentrating on $\Gamma$, we can find a sequence $g_n\in H_d$ with common trace $\Tr_{\Gamma}(g_n)=\mr{q}_d$ and converging to zero in $L^2(\Omega_d)$. For the sum of these sequences we have
+\[
+ \big( f_n+g_n, \Tr_\Gamma(f_n+g_n) \big) \conv (q_d,\mr{q}_d)\quad \text{ in } Q_d\times\mr{Q}_d.
+\]
+
+
+Our next goal is to show existence and uniqueness of the solution of Problem~$P_T$. To this end we shall
+use following abstract existence result:
+\begin{thm}\cite[Theorem 1.2]{fortin_mixed_1991}
+\label{thm_ex_fortin}
+Assume that $a(\argdot,\argdot)$, $b(\argdot,\argdot)$, $c(\argdot,\argdot)$ are continuous bilinear forms 
+on $V\times V$, on $V\times Q$, and on $Q\times Q$ respectively. Assume further that $a(\argdot,\argdot)$ is coercive on $V$, assume that operator 
+\[
+  B: V\to Q',\quad \langle B(\vl), q\rangle = b(\vl,q)
+\]
+is closed in $Q'$, and assume that $c(\argdot,\argdot)$ is possitive definite, symmetric,
+and coercive on $Ker B^t$. Then for every $g\in V'$ and every $f\in Q'$ the system
+\begin{align}
+        \label{Saddle1}
+ a(\vl,\vc w) + b(\vc w, p) &= \langle g, \vc w \rangle &&\forall \vc w\in V,\\
+        \label{Saddle2}
+ b(\vl, q) - c(p,q) &= \langle f, q \rangle &&\forall q \in Q,
+\end{align}
+has a solution $(\vl,p)$ which is unique in $V\times Q/M$, where
+\[
+ M=\Ker B^t \cap \Ker C;\quad \langle C(p), \argdot \rangle:=c(p,\argdot).
+\]
+Moreover we have the bound
+\begin{equation}\label{SolEst}
+   \norm{\vl}_V + \norm{p}_{Q/\Ker B^t} \le K\big(\norm{f}_{V'}+\norm{g}_{Q'}\big),
+\end{equation}
+where $K$ is  a nonlinear function of $\norm{a}$, of $\norm{c}$, and of the coercivity constants for $a$, $c$. The function $K$ is bounded on bounded subsets.
+\end{thm}
+To apply this theorem, we have to check the necessary properties for the particular forms $a$, $b$, $c_T$, $F$, and $G$. The form $a(\argdot,\argdot)$ is continuous and coercive if and only if $\tn K_d(\argdot)$ is bounded and uniformly positive definite a.e. The closeness of $B$ is more delicate. Let us assume that there is at least one non-empty Dirichlet boundary $\Gamma_d^D$.
+Without loss of generality let $\Gamma_2^D\ne \emptyset$ and $\Gamma_1^D = \emptyset$.
+We shall prove the reprezentation 
+\begin{equation}
+  \label{ImB}
+  \Im B = M :=\{\phi\in Q'\where \langle \phi_1, 1 \rangle+\langle \mr{\phi_1}, 1\rangle=0\}.
+\end{equation}
+Taking zero $q_2$, $\mr{q_2}$ and
+$q_1$, $\mr{q_1}$ equal to one in the definition of $b(\argdot,\argdot)$, one can directly verify inclusion $\Im B \subset M$. On the other hand, for every $\phi\in M$, there exist 
+$U_2$ in $H_2$, see its definition \eqref{SobolevTestFunc}, and $U_1\in H_1=H^1(\Omega_1)$ such that 
+\begin{equation}
+  \label{DualB}
+  \int_{\Omega_d} \grad U_d\cdot \grad\psi_d = \int_{\Omega_d} \phi_d \psi_d + \int_{\Gamma_d}\mr{\phi_d}\psi_d
+  \qquad \forall \psi_d\in H_d. 
+\end{equation}
+It is easy to check that $\vl=(\grad U_2,\grad U_1)$ satisfies $b(\vl, q) = <\phi,q>$ for all $q\in Q$, which yields $\Im B \supset M$. 
+
+Because of the reprezentation \eqref{ImB}, the codimension of $\Im B$ is $1$ and therefore $B$ is closed in $Q'$.
+At the presence of both Dirichlet boundaries, the operator $B$ is even surjective since \eqref{DualB} has solution
+for any $\phi\in Q'$. For closed operator $B$ one has $(\Ker B^t)\perp\Im B$ which together with \eqref{ImB} implies the reprezentation 
+\begin{equation}
+   \label{KerBTrep}
+   \Ker B^t = \{ q\in Q\where q_d=\mr{q_d}=const.\}
+\end{equation}
+whenever $\Gamma_d^D$ is empty or even 
+\[
+\Ker B^t=\{0\} 
+\]
+when both Dirichlet bounderies are present. 
+
+Knowladge of $\Ker B^t$ allows us to  check properties of the form $c$. For $p\in \Ker B^t$ we have $p_1=0$, $p_2=\mr{p_2}=C$ or $p_1=C$, $p_2=\mr{p_2}=0$, possibly with $C=0$. Since $T$ maps constants to constants, cf. \eqref{OpTconst}, we conclude
+\[
+c(p,p)=\abs{\Omega_1}C^2\ge \tilde C \norm{p}^2_{Q},
+\]
+i.e. coercivity of $c$ on $\Ker B^t$ with a constant $\tilde C$ dependent only on the problem geometry. By the same token 
+\[
+  \Ker B^t\cap\Ker C = \{0\}.
+\]  
+Finally the functionals $G$ and $F$ are bounded in $V'$ and $Q'$ provided 
+\begin{equation}\label{data_cond}
+        \tilde P_d\in H^{1/2}(\Gamma_d),\ f_d\in L^2(\Omega_d),\text{ and }\vl_d^N\in L^2(\Gamma_d^N),\quad \text{for }d=1,2.
+\end{equation}
+Having verified all assumptions of Theorem \ref{thm_ex_fortin} we can claim its applied version.
+
+\begin{thm}
+\label{ThmExistence}
+Let $\tilde P_d$, $f_d$, and $\vl_d^N$ be given functions satifying \eqref{data_cond}.
+Assume that $\tn K_d$, $d=1,2$ are given tensor functions $\Omega_d \to \Real^{d\times d}$, which are bounded and uniformly possitive definite, i.e.
+\[
+   \abs{\tn K_d(\vc x)}\le \alpha,\text{ and } \abs{\tn K_d(\vc x)^{-1}} \le \beta,\quad \text{for any }
+   \vc x\in \Omega_d.
+\]
+Then there exists a solution $(\vl,p)\in V\times Q$ of the problem $P_T(\mathcal P)$, which is unique in the same space.
+Moreover we have the bound
+\begin{equation}\label{SolEstimate}
+   \norm{\vl}_V + \norm{p}_{Q} \le K\sum_{d=1,2}
+   \left(\norm{\tilde P_d}_{H^{1/2}(\Gamma_d)}+\norm{f_d}_{L^2(\Omega_d)}+\norm{u_d^N}_{L^2(\Gamma_d^N)}\right)
+\end{equation}
+where $K$ is  a nonlinear function of $\alpha$ and  $\beta$, which is bounded on bounded subsets.
+\end{thm}
+Compared to \eqref{SolEst},  we have the pressure bounded even in $Q$ since a possible constant shift of 
+the pressure of the non-Dirichlet domain is controled through the form $c$. In fact we can prove higher regularity of the pressure.
+\begin{proposition}
+\label{Pregularity}
+Let $(\vl,p)$ be a solution to the problem $P_T(\mathcal P)$ then $p_d$ belongs to $H_d$  and
+\begin{equation}\label{Pest}
+   \norm{p_d}_{H_d} \le C \big(\norm{\vl}_V+\norm{p}_Q\big),\quad d=1,2.
+\end{equation}
+Moreover 
+\begin{equation}
+  \mr{p}_d+\tilde P_d=\Tr_{\Gamma_d}(p_d)\quad\text{ and }\quad \tn K^{-1}\vl_d=-\grad p_d\quad  \text{for } d=1,2. 
+\end{equation}
+\end{proposition}
+\begin{proof}
+ Taking $\vc w\in H^1_0(\Omega_d)$ as a test function in \eqref{SaddlePT1} the integrals over the interior faces cancels out 
+ and we end up with
+ \[
+    \int_{\Omega_d} \vl_d \tn K^{-1}_d \vc w -\int_{\Omega_d} p_d\div\vc w =0.
+ \]
+ Thus the weak gradient of $p_d$ exists, is equal to $\tn K^{-1}\vl_d$ and consequently bounded in $L^2(\Omega_d)$.
+ This confirms \eqref{Pest}.
+ Further for any $\phi\in L^2(\Gamma_d)$, we can find a valid test function $w\in V_d$ with trace $\phi$ on $\Gamma_d$. Multiplying $\vc w$ by a sequence of cutoff functions concentrating on $\Gamma_d$, we obtain a sequence $\vc w_n$ converging to zero in $L^2(\Omega_d)$. Using this as a test function in \eqref{SaddlePT1}, integrating by parts and passing to the limit we get
+ \[
+  \int_{\Gamma_d} \mr{q}_d \phi - \int_{\Gamma_d} p_d \phi = -\int_{\Gamma_d} \tilde{P}_d \phi,
+ \]
+ which gives $p_d=\mr{p}_d+\tilde P_d$ on $\Gamma_d$. 
+\end{proof}
+
+Next, we prove that Definiton \ref{DefProblemPT} is in some sense independent of the partitioning. Let $\mathcal P=\{\Omega_d^i\}$ be a partitioning of domains $\Omega_d$, $d=1,2$. Chose two neigbouring subdomains
+$K_1=\Omega_d^j$ and $K_2=\Omega_d^k$ sharing the boundary $S=\prtl K_1\cap \prtl K_2$. The joined subdomain $K$ is the smallest open superset of $K_1$ and $K_2$. We denote $\tilde{ \mathcal P}$ the partitioning that contains
+$K$ instead of $K_1$ and $K_2$. Now we state following eqivalence of solutions on decompositions $\mathcal P$ and $\tilde{\mathcal P}$.
+
+\begin{proposition}
+\label{PartEqiv}
+Assume that operator $T$ does not depend on $\mr{q}_2$ with support on $S$, i.e.
+\begin{equation}\label{Tsupport}
+   T(0,\mr{q}_2)=0,\quad \text{for } \mr{q}_s\in H^{1/2}_0(S).
+\end{equation}
+Then for any choice of $K_1$, $K_2$ the pair $(\vl,p)\in V\times Q$ is solution of $P_T(\mathcal P)$ if and only if
+it is solution of $P_T(\tilde {\mathcal P})$.
+\end{proposition}
+\begin{proof}
+Let us denote $\tilde V$, $\tilde Q$, $\tilde a$, $\tilde b$, and $\tilde c$ the spaces and the forms of the problem $P_T(\tilde{\mathcal P})$ corresonding to the objects in Definition \ref{DefProblemPT} of problem $P_T(\mathcal P)$. First assume that $(\vl,p)$ is solution of problem $P_T(\mathcal P)$. Testing \eqref{SaddlePT2} by $\mr{q}\in H^{1/2}_0(S)$ we get
+\begin{equation}\label{vl_normal_trace}
+  \int_{\prtl K_1} (\vl\cdot\vc n) \mr{q}+ \int_{\prtl K_2} (\vl\cdot\vc n) \mr{q} = 0,
+\end{equation}
+because of the condition \eqref{Tsupport}. Consequently $\vl$ have continuous normal trace on $S$ and it belongs in $\tilde V$. In the view of Proposition \ref{Pregularity} we can consider $p$ as member of $\tilde Q$. From its definition $a$ is equal to $\tilde a$ on $V\times V$. Further $b=\tilde b$ on $\tilde V\times Q$ since \eqref{vl_normal_trace} holds for any $\vl\in \tilde V$. Finally, from condition \eqref{Tsupport} we have $c=\tilde c$ on $Q\times Q$. The right-hand sides are same. Because Accordingly $(\vl, p)$ as a member of $\tilde V\times \tilde P$ is also the solution of $P_T(\tilde{\mathcal P})$.
+
+Conversly for any solution $(\tilde \vl, \tilde p)$ of $P_T(\tilde{\mathcal P})$, there exists a unique solution $(\vl, p)$ of the problem $P_T(\mathcal P)$, which we have just proved to be also solution of $P_T(\tilde{\mathcal P})$
+which is also unique, thus $(\tilde \vl, \tilde p)=(\vl, p)$. 
+\end{proof}
+
+The main result of this section is comparison of the solution to the $P$ and $P_T$ problems on different partitioning. 
+
+
+\begin{thm}
+ Let $(\vl,p)\in V\times Q$ be the solution of the problem $P(\mathcal P)$ and $(\tilde\vl,\tilde p)\in \tilde V\times \tilde Q$ be the solution of the problem $P_T(\tilde{\mathcal P})$, where $T$ is a continuous linear operator satisfying \eqref{OpTconst} and
+ \begin{equation}\label{Tapprox}
+    \norm{\Tr\, q - T q}_{L^2(\Omega_1)} \le \norm{\Tr-T} \norm{q}_{H_2}.
+ \end{equation}
+Assume further that at least one of Dirichlet boundaries $\Gamma_d^D$ is non-empty.
+Then 
+\begin{equation}\label{MainEstimate}
+  \norm{\vl-\tilde\vl}_{L^2(\Omega_2)\times L^2(\Omega_1)}+\norm{p-\tilde p}_{H_2\times H_1} \le
+     K\norm{\tilde p}_{H_2\times H_1},
+\end{equation}
+where
+\[
+  K=\frac{C}{\norm{\tn K^{-1}}_{L^\infty}} \norm{\Tr - T}
+\]
+and $C$ depends only on geometry of $\Omega_2$ and $\Omega_1$.
+\end{thm}
+\begin{proof}
+ In view of Proposition \ref{PartEqiv} the pair $(\tilde \vl, \tilde p)$ is also solution of $P_T(\mathcal P)$.
+ Then subtracting equations for problem $P(\mathcal P)$ and $P_T(\mathcal P)$ we get
+\begin{align}
+ a(\vl-\tilde \vl,\vc w) + b(\vc w, p-\tilde p) &= 0, &&\forall \vc w\in V,\\
+ b(\vl-\tilde \vl, q) - c(p-\tilde p,q) &= c(\tilde p,q)-c_T(\tilde p,q) &&\forall q \in Q.
+\end{align}
+Now we take $w=\vl-\tilde \vl$, $q=p-\tilde p$ and subtract the second equation from the first to get
+\[
+  a(\vl-\tilde \vl,\vl-\tilde\vl) +c(p-\tilde p, p-\tilde p) 
+  \le \sup_{q\in H_2\times H_1} \frac{\abs{c(\tilde p,q)-c_T(\tilde p,q)}}{\norm{q}_{H_2\times H_1}} 
+      \norm{p-\tilde p}_{H_2\times H_1}.
+\]
+Using Proposition \ref{Pregularity} and Friedrichs' inequality, we can control $\norm{p -\tilde p}_{H_2\times H_1}$
+by the left-hand side whenever at least one of $\Gamma_d^D$ is non-empty. In particular we get
+\begin{equation}\label{ME1}
+  \norm{p-\tilde p}_{H_2\times H_1} \le \frac{C_1}{\norm{\tn K^{-1}}_{L^\infty}} 
+  \norm{C(\tilde p)- C_T(\tilde p)}_{\big(H_2\times H_1\big)'},
+\end{equation}
+where $C_1$ depends only on the geometry of $\Omega_2$ and $\Omega_1$.
+The right-hand side can be further estimated as follows
+\begin{multline}\label{ME2}
+ \abs{c(\tilde p,q)-c_T(\tilde p,q)} =
+ \left\vert\int_{\Omega_1} (T\tilde p_2-\Tr\tilde p_2)(q_1-\Tr q_2)+(T q_2-\Tr q_2)(\tilde p_1 -T \tilde p_2)\right\vert\\
+ \le \norm{\Tr-T}\norm{\tilde p_2}_{H_2}\,C_2\norm{q}_{H_2\times H_1} 
+     + \norm{\Tr-T}\norm{q_2}_{H_2}\,C_2\norm{\tilde p}_{H_2\times H_1}\\
+ \le C_2\norm{\Tr-T}\norm{\tilde p}_{H_2\times H_1}\norm{q}_{H_2\times H_1},
+\end{multline}
+where $C_2$ is norm of the trace operator $\Tr$ on $\Omega_1$, thus also dependent only on geometry of $\Omega_2$ and $\Omega_1$. Then we get \eqref{MainEstimate} as a direct consequence of \eqref{ME1} and \eqref{ME2} 
+\end{proof}
+
+
+
+Furthermore, one can use Raviart-Thomas elements to construct approximation spaces and use again theory
+from \cite{Brezzi} to get an $O(h)$ estimate:
+\begin{equation}\label{CompatibleConvergence}
+ \norm{\vl-\vl_h}_{V} + \norm{p-p_h}_{P} \le C h\big(\norm{\vl}_{H^1} + \norm{p}_{H^1}\big).
+\end{equation}
+Note that according to the regularity theory for the linear elliptic equations one can expect $p\in W^{2,p}$ and $\vl\in W^{1,p}$ for all $1<p<\infty$, provided data from $L^\infty$ and certain beter regularity of the boundary conditions.
+
+\section{Mixed-hybrid formulation on non-compatible meshes}
+In practical applications, we frequently use statistically generated fractures. In this situation,
+it could be nearly impossible to produce a regular mesh satisfying the alignment condition
+\eqref{compatible}.  In order to relax this condition, we have to construct an approximation of
+the trace of the pressure on the fracture $\Omega_1$. Let $\{\Omega_2^i\},\ i\in I_2$ be a regular triangular decomposition of $\Omega_2$ with diameter of elements bounded by $h$ and let
+\[
+        \Omega_1^i=\Omega_2^i \cap \Omega_1,
+\] be elements of the induced decomposition of $\Omega_1$.
+On these decompositions we consider spaces $V^h$ and $P^h$ similar to \eqref{Vspace} and \eqref{Pspace}. Splitting further the triangles intersecting $\Omega_1$, we obtain an aligned decomposition of $\Omega_2$ on which we can build spaces $V$ and $P$.
+Finally, we denote $\Omega_{12}$ the union of $\Omega_2$-subdomains intersecting $\Omega_1$
+\[
+  \Omega_{12}=\bigcup_{i\in I_{1}} \Omega_2^i,\quad
+   \text{where }  I_{1}=\{i\in I_2| \Omega_1^i  \ne \emptyset \}.
+\]
+
+Let $\Pi$ be a continuous linear operator from $P_h$ to the functions piecewise continuous on
+subdomains $\Omega_2^i$, $i\in I_1$. Then we can define an approximation $T$ of the trace operator for the functions $p\in P_h$ by the formula $T(p)=Tr_{\Omega_1}(\Pi(p))$, locally on each triangle $\Omega_2^i$, $i\in I_1$. In particular, we can use an average approximation
+\[
+   \Pi_0 |_{\Omega_2^i}(p) = \frac{1}{\abs{\Omega_2^i}}
+                \int_{\Omega_2^i} p_2 \dx,\quad \forall i\in I_{1}
+\]
+or a piecewise linear approximation $\Pi_1$ such that
+\[
+  \int_S \Pi_1|_{\Omega_2^i}(p) = \int_S \mr{p}_2
+\]
+for every side $S$ of the triangle $\Omega_2^i$, $i\in I_{1}$.
+
+The operator $T$ can be used to extend the trace component $\mr{p}_2$ of the space $P_h$ on the fracture $\Omega_1$. Consequently, we  can treat the space $P_h$ as a subspace of $P$ with a norm
+\begin{equation}\label{PspaceExtension}
+        \norm{f}_P=\norm{f}_{P_h}+\norm{T f}_{H^{1/2}(\Omega_1)}.
+\end{equation}
+In view of this convention, one can use Definition 1 with spaces $V_h \subset V$ and $P_h\subset P$ to introduce a semi-discrete solution $(\vl_h,p_h)$. Then again,
+Theorem 1.2 in \cite{Brezzi} implies the existence and uniqueness of the solution.
+
+Now we want to compare the MH-solution $(u,p)\in V\times P$ to the semi-discrete solution $(\vl_h,p_h)\in V_h\times P_h$. Following the proof of Proposition 2.11 in \cite{Brezzi}, we can show
+\begin{equation}\label{MainEst}
+        \norm{\vl-\vl_h}_V + \norm{p-p_h}_P \le C\big(
+                \inf_{\vc v_h \in V_h}\norm{\vl - \vc v_h}_{V} + \inf_{q_h\in P_h}\norm{p-q_h}_{P}
+                \big).
+\end{equation}
+Taking $\vc v_h=\vl-\vl^*$, where $\vl^*$ is a divergence free extension of $[\vl]_{\Omega_1}$
+to $\Omega_{21}$, we can bound the first term by $O(h)$ times $L^2$-norm of $[\vl]_{\Omega_1}$.
+Further, we take $q_h$ equal to the projection of $p$ on the space $P_h$, then according to \eqref{PspaceExtension} we get
+\[
+  \norm{p-q_h}_{P} = \norm{p-T p}_{H^{1/2}(\Omega_1)}\le C\Big(\sum_{i\in I_1} \norm{p - \Pi p}_{H^1(\Omega_2^i)}^2\Big) ^\frac12.
+\]
+If $\Pi$ preserves polynomials up to the order $k$, the standard approximation estimates
+(see \cite{FEMHandbook} Theorem 16.2) leads to
+\[
+ \norm{p-\Pi p}_{1,\Omega_2^i}\le C\abs{\Omega_2^i}^{\frac12-\frac1q} h^k \abs{p}_{k,q,\Omega_2^i}.
+\]
+Since we assume regular triangulation, we have $\abs{\Omega_2^i}\le C h^N$ and $\abs{I_1} \le C h^{1-N}$,
+where $N=2$ is dimension of $\Omega_2$.
+Then we conclude
+\[
+        \norm{p-Tp}_{H^{1/2}(\Omega_1)}\le C h^{N(\frac12-\frac1q)+k}\Big(\sum_{i\in I_1} \abs{p}_{k+1,q,\Omega_2^i}^2 \Big)^\frac12\le
+        C h^\alpha \abs{p}_{k+1,q,\Omega_2}
+\]
+where 
+\begin{equation}\label{ApproxOrder}
+        \alpha= N\Big(\frac12-\frac1q\Big)+k+(1-N)\frac{q-2}{2q}=k+\frac{1}{2}-\frac{1}{q}.
+\end{equation}
+
+\section{Conclusion}
+We have proposed two approximations of the original MH-problem on the non-aligned meshes. 
+The first is based
+on the operator $\Pi_0$, which preserves only polynomials of zero order. Hence, $\alpha<1/2$ for all $q$ and we obtain a suboptimal convergence compared to \eqref{CompatibleConvergence}. In the later case, the approximation is based on the operator
+$\Pi_1$, which preserves polynomials of the first order. We get $\alpha=1$ for $q=2$ and an optimal  convergence rate $O(h)$.
+In both cases, we have to assume certain regularity of the exact solution. Although we did our analysis
+only in 2D case with simple geometry, the abstract formulation and the results hold also for more complicated geometries and 3D-2D communication. 
+
+%\begin{thebibliography}{99}
+%\bibitem{Brezzi} F. Brezzi, M. Fortin,
+%{\it Mixed and Hybrid Finite Element Methods}.
+%Springer Verlag, Berlin/Heidelberg, 1991
+%\bibitem{FEMHandbook} P.G. Ciarlet, J.L. Lions,
+%{\it Handbook of Numerical Analysis : Finite element method (Part~1)}.
+% North-Holland, Amsterdam, 1991
+%\bibitem{Maryska} J. Mary\v{s}ka,  M. Rozlo\v{z}n\'{\i}k, M. T\r{u}ma.
+%{\it Mixed-hybrid finite element approximation  of the potential fluid flow problem}.
+%J. Comput. Appl. Math., Vol. 63, (1995), pp. 383--392.
+
+%\end{thebibliography}
+
+\bibliographystyle{plain}
+\bibliography{mamern.bib}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+

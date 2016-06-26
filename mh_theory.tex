@@ -219,7 +219,7 @@ spatial dimensions (line elements in 1D, triangles in 2D, and tetrahedrons in
 3D). The systems of linear equations obtained from the FEM discretisation are
 often very large, so that using direct methods is prohibitive and iterative
 solvers are warranted. The systems are typically also
-\hl{bad}-conditioned due to mixing of spatial dimensions, large jumps in
+bad-conditioned due to mixing of spatial dimensions, large jumps in
 permeability coefficients and presence of elements of considerably different
 sizes, and so they are challenging for iterative solvers as well.
 
@@ -278,7 +278,7 @@ an alternative, \emph{dual} approach, here.
 
 Our methodology is as follows. The mixed-hybrid formulation \cite{Maryska-1995-MHF,Oden-1977-DMH} is used in order
 to modify the saddle-point problem to one which is symmetric and positive
-definite \hl{by means of iterative substructuring. 
+definite by means of iterative substructuring. 
 In particular, we 
 %\hl{construct}
 %eliminate 
@@ -286,7 +286,7 @@ In particular, we
 %\hl{all unknowns interior to subdomains and introduce }
 %and
 introduce a symmetric positive definite Schur complement with respect to
-interface Lagrange multipliers, corresponding to a part of block~$\ol{C}$.}
+interface Lagrange multipliers, corresponding to a part of block~$\ol{C}$.
 The
 reduced system is solved by the preconditioned conjugate gradient (PCG)
 method, and the BDDC method is used as the preconditioner. From this
@@ -335,7 +335,7 @@ norm of a vector$~x$ is denoted\ by $\left\Vert x\right\Vert _{M}=\sqrt
 
 \label{sec:model}
 
-Let $\Omega$ be an open bounded \hl{polyhedral} domain in $\mathbb{R}^{3}$. We are
+Let $\Omega$ be an open bounded polyhedral domain in $\mathbb{R}^{3}$. We are
 interested in the solution of the following problem, combining the Darcy's law
 and the equation of continuity written as
 \begin{align}
@@ -528,7 +528,7 @@ law~(\ref{eq:problem-1}):
 where $\mathbf{u}_{d}$ stands for the 
 velocity integrated over the cross-section for $d=1,2$,
 i.e. the units of $\mathbf{u}_{3}$, $\mathbf{u}_{2}$, and $\mathbf{u}_{1}$ are ms$^{-1}$, m$^{2}$s$^{-1}$, and m$^{3}$s$^{-1}$, respectively.
-\hl{In addition, $\delta_{3}=1$, $\delta_{2}$ is the thickness of a fracture, and $\delta_{1}$ is the cross-section of a 1D preferential channel.}
+In addition, $\delta_{3}=1$, $\delta_{2}$ is the thickness of a fracture, and $\delta_{1}$ is the cross-section of a 1D preferential channel.
 The effective fluid source $f_{2}$
 on $\Omega_{2}$ is given as
 \begin{equation}
@@ -694,7 +694,7 @@ C_{\mathcal{F}} & \widetilde{C}%
 \right]  $ related to the normal fluxes between dimensions and arising
 from~(\ref{eq:newton-1})--(\ref{eq:newton-2}) and (\ref{eq:newton-3}) via
 (\ref{eq:weak_term_cbar})--(\ref{eq:weak_term_ctilde}).
-\hl{
+
 In particular, 
 the modified right-hand side of the continuity equation for two-dimensional and one-dimensional  
 elements, $f_{2}$ and $f_{1}$, incorporates pressure unknowns on 2D and 1D  elements, 
@@ -702,7 +702,7 @@ and traces of pressure on 3D and 2D elements at the fracture,
 which are nothing but the Lagrange multipliers on 3D and 2D elements in the mixed-hybrid method.
 Consequently, 
 $p_{3}^{+/-} = \lambda_{3}^{+/-}$ in~(\ref{eq:newton-1})--(\ref{eq:newton-2}), and $p_{2}^{k} = \lambda_{2}^{k}$ in~(\ref{eq:newton-3}).
-}
+
 
 Assuming~$\delta_{d}$ bounded and greater than zero, and using the fact
 that~$\Bbbk_{d}$ corresponds to a symmetric positive definite matrix, we see
@@ -720,11 +720,11 @@ The following theorem is a standard result, e.g. \cite[Theorem~1.2]%
 {Brezzi-1991-MHF}. Here, we rewrite it in a form suitable for our setting and
 we verify the assumptions for the specific blocks of the matrix in
 (\ref{eq:hybrid-m-fractured}).
-\hl{
+
 We will further denote $\ol{Q} = Q\times \Lambda$, 
 $\ol{p}=(p,\lambda) \in \ol{Q}$, $\ol{q}=(q, \mu) \in \ol{Q}$, and 
 $\ol{b}(\vc u, \ol{q})=b(\vc u, q) + b_{\mathcal{F}}(\vc u, \mu)$. 
-}
+
 
 
 \begin{theorem}
@@ -739,7 +739,7 @@ has a unique solution.
 
 \def\component{\Omega^c_k}
 \begin{proof}
-\hl{
+
 Let us first investigate the structure of the matrix in 
 (\ref{eq:hybrid-m-fractured}) more closely. 
 Suppose numbering of unknowns within each block of (\ref{eq:hybrid-m-fractured}) 
@@ -919,10 +919,18 @@ and problem~(\ref{eq:hybrid-m-fractured}) has a unique solution.
 %and the sum $\ol{B}A^{-1}\ol{B}^T + \ol{C}$ is positive definite on the whole space.
 %Prescribing \hl{natural} boundary conditions at a different mesh dimension follows analogously,
 %and the rest of the proof follows by the Sylvester law of inertia from (\ref{eq:congruence1}) as in the previous case.
-}
+
 \end{proof}
 
-\hl{
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 We also show that a certain uniform inf-sup condition is satisfied.
 Let us emphasise that $\text{null}\,\ol{B}^T$ is given only by the geometry of 
 the problem, namely it is independent of the discretisation, and therefore, 
@@ -980,6 +988,14 @@ Am I right that zero mean property of $W_k$ is needed for the Friedrichs
 (I would say better mean Poincar{\' e} inequality, according to the source)
 which in results due to Lax Milgram gives us also uniqueness of $U$,
 which we do not need in fact?}
+\noteJB{Exactly. The Poincare ineq. is necessary for the ellipticity. I do not know a version of the 
+Lax-Milgram for the Neumann only case. I rather introduced the zero mean condition to stay within the standard theory. 
+}
+\begin{equation*}
+  W(T)=\Big\{\phi(x) = \sum_{i=1}^{d+1} 
+    \frac{a_i}{2} \big(x - N_{T,i}\big)^2 + a_0\Big\}.  
+\end{equation*}
+
 \begin{equation*}
   W_k =\Big\{\phi\in \prod_{T\in \mathcal{T}_k} W(T) : 
     \int_{\component} \phi \dd x =0,\quad
@@ -987,17 +1003,52 @@ which we do not need in fact?}
     \left( \phi|_{T} - \phi|_{T'}\right) \dd s = 0,\quad \forall 
 T,T'\in\mathcal{T}_k\Big\}, 
 \end{equation*}
+for $k=1,\dots, n_{ci}$
 \begin{equation*}
-  W(T)=\Big\{\phi(x) = \sum_{i=1}^{d+1} 
-    \frac{a_i}{2} \big(x - N_{T,i}\big)^2 + a_0\Big\}.  
+  W_k =\Big\{\phi\in \prod_{T\in \mathcal{T}_k} W(T) : 
+    \phi = 0 \text{ on } \partial \component \cap \partial \Omega_{N},\quad
+    \int_{\partial T \cap \partial T'} 
+    \left( \phi|_{T} - \phi|_{T'}\right) \dd s = 0,\quad \forall 
+T,T'\in\mathcal{T}_k\Big\}, 
 \end{equation*}
+for $k=n_{ci}+1,\dots, n_c$.
+
 Here, we denote by $N_{T,i}$ the vertices of the simplex $T$, and $a_i \in \mathbb{R},\ i = 0,\dots,d+1$ are coefficients. 
 Instead of zero mean, we require homogeneous natural boundary condition on 
 $\partial \component \cap \partial \Omega_{N}$ for components that have this 
 set non-empty.
 
+
+In particular, local finite elements are unisolvable with respect to linear 
+forms
+\begin{equation*}
+  F_0(\phi)=\int_T \phi\, dx,\quad F_s(\phi) = \int_{s} \phi\, ds,\quad 
+\text{for all sides $s$ of $T$},
+\end{equation*}
+which provides us with test functions to get (\ref{eq:infsup_relation}) back 
+from (\ref{eq:infsup_weakform2}). 
+\noteJB{This means that DOFs of $W_k$ are means over elements and means over edges.}
+
+
+
 Within such setting, we can test \eqref{eq:infsup_relation} with a function 
 $\ol\phi = (\phi, \phi_e) \in W_k \subset \ol Q$, $\phi_e$ being the trace of $\phi$ on element face $e$.
+\noteJB{This is incorect since we can not have the test function for just single face. In fact this is a subtile part of the proof.
+The test function $\phi_e$ (I rather use $\nu$.) is any member of $\Lambda_k$ such that for any edge/face $e$ and any connected element $T$:
+\[
+ \int_{e} 
+    \left( \nu - \phi|_{T\cap e}\right) \dd s = 0
+\]
+The space $\Lambda_k$ has to be introduced for the face set $\mathcal F_k$. In particular for an edge $e = T \cap T'$ the functions
+$\phi|_{e\cap T}$, $\phi|_{e\cap T'}$, $\nu|_e$ could be different, but have a coomon mean over the $e$. Then
+\[
+    \int_{e} (\nu|_{e}  - \phi|_{T\cap e})\vc v \cdot \vc n \dd s = 0
+\]
+since $\vc v \cdot \vc n$ is constant on $e$.}
+\noteJB{We have to use better notation. At least we can rename $\phi$ to $r$ and $\phi_e$ to $\nu$. 
+In the mamern stub I have used the ring accent for the trace spaces and variables.}
+
+
 We then have
 \begin{eqnarray}
     b(\vc v, \phi) + b_{\mathcal{F}}(\vc v, \phi_e) &=& \langle q_\bot, \phi \rangle 
@@ -1036,6 +1087,7 @@ $\norm{U}_{0,e} \leq c_t\norm{U}_{1,T}$ and the discrete Friedrichs inequality
 with $C_F$ dependent only on the geometry of $\component$ and regularity of 
 the mesh (see e.g. \cite{Vohralik-2005-ODP}), we obtain a bound 
 \notePE{Constant $c_t$ is probably dependent on $\partial T$, but I do not know how. Is it not a problem? (dependence on $h$ ?)}
+
 \begin{equation} \label{eq:infsup_estimate1}
 \norm{\nabla U}_{0,\component} \leq \tilde C \norm{\ol q_\bot}_{\ol Q, \component},
 \end{equation}
@@ -1055,16 +1107,8 @@ That comes from simple sum of the result over components. Is that correct?}
 
 
 
-In particular, local finite elements are unisolvable with respect to linear 
-forms
-\begin{equation*}
-  F_0(\phi)=\int_T \phi\, dx,\quad F_s(\phi) = \int_{s} \phi\, ds,\quad 
-\text{for all sides $s$ of $T$},
-\end{equation*}
-which provides us with test functions to get (\ref{eq:infsup_relation}) back 
-from (\ref{eq:infsup_weakform2}). 
 \end{proof}
-}
+
 
 \begin{figure}[tbh]
 \begin{center}
